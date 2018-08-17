@@ -184,7 +184,7 @@ var ChatBusService = /** @class */ (function () {
         this.name = "";
     }
     ChatBusService.prototype.connect = function () {
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("https://rrnodechat.azurewebsites.net/", {
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("https://rrnodechatserver.herokuapp.com/", {
             transports: ['websocket', 'xhr-polling', 'polling'],
             withCredentials: false
         });
@@ -281,7 +281,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Rohit\RnD\ChatDemo\chatwebclient\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! C:\Rohit\RnD\ChatDemo\ChatwebClient\src\main.ts */"./src/main.ts");
 
 
 /***/ }),
