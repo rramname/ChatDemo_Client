@@ -12,7 +12,7 @@ export class ChatBusService {
    }
    connect(){
     this.socket = socketIo("https://rrnodechatserver.herokuapp.com/",{
-      transports: ['websocket', 'xhr-polling','polling'],
+      transports: ['websocket','polling'],
       withCredentials:false
     });
     
