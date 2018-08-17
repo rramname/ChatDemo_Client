@@ -11,7 +11,7 @@ export class ChatBusService {
 
    }
    connect(){
-    this.socket = socketIo("ws://rrnodechatserver.herokuapp.com",{
+    this.socket = socketIo("https://rrnodechatserver.herokuapp.com",{
       transports: ['websocket'],
       withCredentials:false
     });
