@@ -184,8 +184,8 @@ var ChatBusService = /** @class */ (function () {
         this.name = "";
     }
     ChatBusService.prototype.connect = function () {
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("ws://rrnodechatserver.herokuapp.com/websocket", {
-            transports: ['websocket'],
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("https://rrnodechatserver.herokuapp.com/", {
+            transports: ['polling', 'websocket'],
             withCredentials: false
         });
     };
