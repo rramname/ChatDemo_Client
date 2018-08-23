@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n User Name: <input type=\"text\" [(ngModel)]=\"name\" />  \n<input (click)=\"Connect()\" value=\"Connect\" type=\"button\" title=\"Connect\" />\n\n<p *ngIf=\"connected\" style=\"text-decoration: underline\">\n  Welcome {{name}}\n</p>\n<div *ngIf=\"connected\">\n<input type=\"text\" [(ngModel)]=\"msg\" />\n<input  (click)=\"sendMessage()\" value=\"Send\" type=\"button\"  />\n<ul id=\"msgs\">\n  <li *ngFor=\"let m of msgs\">{{m}}</li>\n</ul>\n</div>\n\n"
+module.exports = "\n User Name 1: <input type=\"text\" [(ngModel)]=\"name\" />  \n<input (click)=\"Connect()\" value=\"Connect\" type=\"button\" title=\"Connect\" />\n\n<p *ngIf=\"connected\" style=\"text-decoration: underline\">\n  Welcome {{name}}\n</p>\n<div *ngIf=\"connected\">\n<input type=\"text\" [(ngModel)]=\"msg\" />\n<input  (click)=\"sendMessage()\" value=\"Send\" type=\"button\"  />\n<ul id=\"msgs\">\n  <li *ngFor=\"let m of msgs\">{{m}}</li>\n</ul>\n</div>\n\n"
 
 /***/ }),
 
