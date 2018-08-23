@@ -1,10 +1,10 @@
 var http=require('http')
-
+console.log(__dirname)
 function build(){
     
     var exec = require('child_process').exec,child;
 
-child = exec('npm run-script ng build', function(error,stdout,stderr) { 
+child = exec(__dirname+'//node_modules//.bin//ng  build', function(error,stdout,stderr) { 
     if (error) {
       console.log(error.stack); 
       //console.log('Error code: '+ error.code); 
