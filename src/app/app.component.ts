@@ -18,9 +18,12 @@ export class AppComponent {
   }
 
   Connect(){
-    this.chatBus.connect();
+    
+    this.chatBus.connect(this.name);
     this.connected=true;
     this.chatBus.getMessage().subscribe((msg)=>this.msgs.push(msg));
+    this.chatBus.onNewUser().subscribe();
+    this.chatBus.onUserDisconnect().subscribe();
   }
   sendMessage(){
     this.chatBus.sendMessage(this.name +" : "+this.msg)

@@ -10,12 +10,21 @@ export class ChatBusService {
   constructor() {
 
    }
-   connect(){
-    this.socket = socketIo("wss://rrnodechatserver.herokuapp.com/",{
-      withCredentials:false
-    });
+   connect(name){
+     
     
-   }
+     console.log(this.connectedUsers);
+     this.socket = socketIo("wss://rrnodechatserver.herokuapp.com/",{
+       withCredentials:false
+      });
+          this.socket.emit("new-connection",name);
+    }
+
+  //   this.socket = socketIo("http://localhost:3000",{
+  //       withCredentials:false
+  //     });
+  //     this.socket.emit("new-connection",name);
+  //  }
 
     sendMessage(msg){
       this.socket.emit("new-message",msg)
@@ -25,10 +34,28 @@ export class ChatBusService {
       this.socket.withCredentials=false;
       return new Observable(observer=>{
         this.socket.on("new-message",(data:string)=>{
-          console.log(data);
+          
           observer.next(data)
         })
       }) 
+    }
+
+    onNewUser(){
+      return new Observable(observer=>{
+        this.socket.on("new-connection-success",(data:any)=>{
+         // observer.next(data)
+         console.log(data);
+          this.connectedUsers=data
+        })
+      })
+    }
+
+    onUserDisconnect(){
+      return new Observable(observer=>{
+        this.socket.on("user-disconnected",(data:any)=>{
+          this.connectedUsers=data
+        })
+      })
     }
 
     public onEvent(event: Event): Observable<any> {
@@ -39,5 +66,6 @@ export class ChatBusService {
 
    socket:any;
    name:string="";
+   connectedUsers=[];
 
 }

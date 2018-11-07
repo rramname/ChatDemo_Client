@@ -41,7 +41,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n User Name 2: <input type=\"text\" [(ngModel)]=\"name\" />  \n<input (click)=\"Connect()\" value=\"Connect\" type=\"button\" title=\"Connect\" />\n\n<p *ngIf=\"connected\" style=\"text-decoration: underline\">\n  Welcome {{name}}\n</p>\n<div *ngIf=\"connected\">\n<input type=\"text\" [(ngModel)]=\"msg\" />\n<input  (click)=\"sendMessage()\" value=\"Send\" type=\"button\"  />\n<ul id=\"msgs\">\n  <li *ngFor=\"let m of msgs\">{{m}}</li>\n</ul>\n</div>\n\n"
+module.exports = "\n<div class=\"container\">\n \n \n    <div class=\"jumbotron\" >\n        <h1 class=\"display-4\">Hello, world!</h1>\n        <p class=\"lead\">This is a chat demo made with Socket.IO and NodeJS</p>\n        <hr class=\"my-4\">\n        <div >\n            <p>User Name: <input type=\"text\" [(ngModel)]=\"name\" />  \n            </p>\n          <p class=\"lead\">\n              <input (click)=\"Connect()\" class=\"btn btn-primary\" value=\"Connect\" type=\"button\" title=\"Connect\" />\n          </p>\n        </div>\n        \n      </div>\n  \n \n<div *ngIf=\"connected\">\n  <div class=\"row \">\n    <div  class=\"col-md-4 mb-3\" *ngFor=\"let user of chatBus.connectedUsers\" >\n      <online-users [userName]=\"user\">\n        </online-users>\n      </div>\n  </div>\n    \n</div>\n  \n</div>\n\n"
 
 /***/ }),
 
@@ -81,9 +81,11 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.Connect = function () {
         var _this = this;
-        this.chatBus.connect();
+        this.chatBus.connect(this.name);
         this.connected = true;
         this.chatBus.getMessage().subscribe(function (msg) { return _this.msgs.push(msg); });
+        this.chatBus.onNewUser().subscribe();
+        this.chatBus.onUserDisconnect().subscribe();
     };
     AppComponent.prototype.sendMessage = function () {
         this.chatBus.sendMessage(this.name + " : " + this.msg);
@@ -120,6 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+/* harmony import */ var _online_users_online_users_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./online-users/online-users.component */ "./src/app/online-users/online-users.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -130,13 +133,15 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 
+
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
-                _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]
+                _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"],
+                _online_users_online_users_component__WEBPACK_IMPORTED_MODULE_4__["OnlineUsersComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
@@ -182,12 +187,20 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var ChatBusService = /** @class */ (function () {
     function ChatBusService() {
         this.name = "";
+        this.connectedUsers = [];
     }
-    ChatBusService.prototype.connect = function () {
+    ChatBusService.prototype.connect = function (name) {
+        console.log(this.connectedUsers);
         this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("wss://rrnodechatserver.herokuapp.com/", {
             withCredentials: false
         });
+        this.socket.emit("new-connection", name);
     };
+    //   this.socket = socketIo("http://localhost:3000",{
+    //       withCredentials:false
+    //     });
+    //     this.socket.emit("new-connection",name);
+    //  }
     ChatBusService.prototype.sendMessage = function (msg) {
         this.socket.emit("new-message", msg);
     };
@@ -196,8 +209,25 @@ var ChatBusService = /** @class */ (function () {
         this.socket.withCredentials = false;
         return new rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"](function (observer) {
             _this.socket.on("new-message", function (data) {
-                console.log(data);
                 observer.next(data);
+            });
+        });
+    };
+    ChatBusService.prototype.onNewUser = function () {
+        var _this = this;
+        return new rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"](function (observer) {
+            _this.socket.on("new-connection-success", function (data) {
+                // observer.next(data)
+                console.log(data);
+                _this.connectedUsers = data;
+            });
+        });
+    };
+    ChatBusService.prototype.onUserDisconnect = function () {
+        var _this = this;
+        return new rxjs__WEBPACK_IMPORTED_MODULE_2__["Observable"](function (observer) {
+            _this.socket.on("user-disconnected", function (data) {
+                _this.connectedUsers = data;
             });
         });
     };
@@ -214,6 +244,73 @@ var ChatBusService = /** @class */ (function () {
         __metadata("design:paramtypes", [])
     ], ChatBusService);
     return ChatBusService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/online-users/online-users.component.css":
+/*!*********************************************************!*\
+  !*** ./src/app/online-users/online-users.component.css ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/online-users/online-users.component.html":
+/*!**********************************************************!*\
+  !*** ./src/app/online-users/online-users.component.html ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"card rounded border border-info\">\n    <div class=\"card-body\">\n      <h5 class=\"card-title\">{{userName}}</h5>\n      <h6 class=\"card-subtitle mb-2 text-muted\">Developer</h6>\n      <p class=\"card-text\">Programming is the best</p>\n      <a href=\"#\" class=\"card-link\"><input type=\"button\" class=\"btn btn-primary\" value=\"Chat\"></a>\n      <a href=\"#\" class=\"card-link\"><input type=\"button\" class=\"btn btn-warning\" value=\"Details\"></a>\n    </div>\n  </div>"
+
+/***/ }),
+
+/***/ "./src/app/online-users/online-users.component.ts":
+/*!********************************************************!*\
+  !*** ./src/app/online-users/online-users.component.ts ***!
+  \********************************************************/
+/*! exports provided: OnlineUsersComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OnlineUsersComponent", function() { return OnlineUsersComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var OnlineUsersComponent = /** @class */ (function () {
+    function OnlineUsersComponent() {
+    }
+    OnlineUsersComponent.prototype.ngOnInit = function () {
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Input"])(),
+        __metadata("design:type", String)
+    ], OnlineUsersComponent.prototype, "userName", void 0);
+    OnlineUsersComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'online-users',
+            template: __webpack_require__(/*! ./online-users.component.html */ "./src/app/online-users/online-users.component.html"),
+            styles: [__webpack_require__(/*! ./online-users.component.css */ "./src/app/online-users/online-users.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], OnlineUsersComponent);
+    return OnlineUsersComponent;
 }());
 
 

@@ -1,15 +1,31 @@
 
- User Name 6: <input type="text" [(ngModel)]="name" />  
-<input (click)="Connect()" value="Connect" type="button" title="Connect" />
-
-<p *ngIf="connected" style="text-decoration: underline">
-  Welcome {{name}}
-</p>
+<div class="container">
+ 
+ 
+    <div class="jumbotron" >
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">This is a chat demo made with Socket.IO and NodeJS</p>
+        <hr class="my-4">
+        <div >
+            <p>User Name: <input type="text" [(ngModel)]="name" />  
+            </p>
+          <p class="lead">
+              <input (click)="Connect()" class="btn btn-primary" value="Connect" type="button" title="Connect" />
+          </p>
+        </div>
+        
+      </div>
+  
+ 
 <div *ngIf="connected">
-<input type="text" [(ngModel)]="msg" />
-<input  (click)="sendMessage()" value="Send" type="button"  />
-<ul id="msgs">
-  <li *ngFor="let m of msgs">{{m}}</li>
-</ul>
+  <div class="row ">
+    <div  class="col-md-4 mb-3" *ngFor="let user of chatBus.connectedUsers" >
+      <online-users [userName]="user">
+        </online-users>
+      </div>
+  </div>
+    
+</div>
+  
 </div>
 
